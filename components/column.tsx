@@ -1,8 +1,12 @@
 'use client'
 
-import { Status, useTaskStore } from '@/lib/store'
+import { Status, useTaskStore } from '@/lib/zustand/slices/taskSlice'
 import Task from './task'
 import { useEffect, useMemo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { memoize } from 'proxy-memoize'
+
+
 
 export default function Column({
   title,
@@ -11,20 +15,32 @@ export default function Column({
   title: string
   status: Status
 }) {
-  const tasks = useTaskStore(state => state.tasks)
-  const filteredTasks = useMemo(
-    () => tasks.filter(task => task.status === status),
-    [tasks, status]
-  )
 
-  const updateTask = useTaskStore(state => state.updateTask)
-  const dragTask = useTaskStore(state => state.dragTask)
+  const filteredTasks = useTaskStore(useShallow(
+    (state) => state.tasks.filter(task => task.status === status))
+  );
+  const { draggedTask, updateTask, dragTask } = useTaskStore(useShallow((state) => ({ draggedTask: state.draggedTask, updateTask: state.updateTask, dragTask: state.dragTask })))
 
-  const draggedTask = useTaskStore(state => state.draggedTask)
 
-  useEffect(() => {
-    useTaskStore.persist.rehydrate()
-  }, [])
+    //  const tasks = useTaskStore(state => state.tasks)
+   // const draggedTask = useTaskStore(state => state.draggedTask)
+  // const updateTask = useTaskStore(state => state.updateTask)
+  // const dragTask = useTaskStore(state => state.dragTask)
+
+
+  // const filteredTasks = useMemo(
+  //   () => tasks.filter(task => task.status === status),
+  //   [tasks, status]
+  // )
+  console.log(status + "Re-Rendered....", filteredTasks);
+
+
+
+  
+
+  // useEffect(() => {
+  //   useTaskStore.persist.rehydrate()
+  // }, [])
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     if (!draggedTask) return
@@ -52,7 +68,7 @@ export default function Column({
             </div>
           )}
 
-          {tasks.length && filteredTasks.length === 0 && status !== 'TODO' ? (
+          {filteredTasks.length && filteredTasks.length === 0 && status !== 'TODO' ? (
             <div className='mt-8 text-center text-sm text-gray-500'>
               <p>Drag your tasks here</p>
             </div>

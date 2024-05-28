@@ -1,39 +1,28 @@
 import { Status, useTaskStore } from '@/lib/zustand/slices/taskSlice'
 import { cn } from '@/lib/utils'
 
-export default function Task({
+export default function Desc({
   id,
-  title,
   description,
-  status
 }: {
   id: string
-  title: string
   description?: string
-  status: Status
 }) {
-  const dragTask = useTaskStore(state => state.dragTask)
-  const removeTask = useTaskStore(state => state.removeTask)
 
   return (
     <div
       className={cn(
-        'flex cursor-move items-start justify-between rounded-lg bg-white px-3 py-2 text-gray-900',
-        {
-          'border-2 border-sky-500': status === 'TODO',
-          'border-2 border-amber-500': status === 'IN_PROGRESS',
-          'border-2 border-emerald-500': status === 'DONE'
-        }
+        'flex cursor-move items-start justify-between rounded-lg bg-white px-3 py-2 text-gray-900'
+    
       )}
-      onDragStart={() => dragTask(id)}
-      draggable
+  
     >
       <div>
-        <h3 className='font-medium text-gray-700'>{title}</h3>
+        {/* <h3 className='font-medium text-gray-700'>{title}</h3> */}
         <p className='text-sm font-light text-gray-500'>{description}</p>
       </div>
 
-      <button className='cursor-pointer' onClick={() => removeTask(id)}>
+      <button className='cursor-pointer' >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'

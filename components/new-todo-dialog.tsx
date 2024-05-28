@@ -12,8 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from './ui/textarea'
-
-import { useTaskStore } from '@/lib/store'
+import { Status, useTaskStore } from '@/lib/zustand/slices/taskSlice'
 
 export default function NewTodoDialog() {
   const addTask = useTaskStore(state => state.addTask)
